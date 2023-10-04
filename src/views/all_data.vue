@@ -24,13 +24,13 @@
     </div>
     <b-table :data="students" ref="table" paginated per-page="10" :opened-detailed="defaultOpenedDetails" detailed
       detail-key="id" :detail-transition="transitionName"
-      @details-open="(row) => $buefy.toast.open(`Expanded ${row.user.first_name}`)" :show-detail-icon="showDetailIcon"
+      
       aria-next-label="Next page" aria-previous-label="Previous page" aria-page-label="Page"
       aria-current-label="Current page">
       <b-table-column field="id" label="ID" width="40" numeric v-slot="props">
         {{ props.row.id }}
       </b-table-column>
-
+<!-- @details-open="(row) => $buefy.toast.open(`Expanded ${row.user.id}`)" :show-detail-icon="showDetailIcon" -->
       <b-table-column field="user.first_name" label="First Name" sortable v-slot="props">
         <template v-if="showDetailIcon">
           {{ props.row.first_name }}
@@ -75,8 +75,9 @@
               <ul class="expanPanel">
                 <li>
                   <caption>SUBJECTS:</caption>
-                  <ul v-for="subject in subjects">
-                    <li>{{ subject }}</li>
+                  <!-- { "id": 1, "subject": "ICT", "check": "OK" } -->
+                  <ul v-for="subject in subjects" >
+                    <li>{{ subject.id }}. {{ subject.subject }} - {{ subject.check }}</li>
                   </ul>
                 </li>
               </ul>
@@ -102,11 +103,12 @@ export default {
       showDetailIcon: true,
       useTransition: false,
       students: [],
-      subjects: ["maths", "phisics", "science", "ict"],
+      subjects: [],
     };
   },
   created() {
     this.fetchStudentList();
+    this.fetchSubjectList();
   },
   computed: {
     transitionName() {
@@ -128,6 +130,19 @@ export default {
         console.error('An error occurred:', error);
       }
     },
+    async fetchSubjectList() {
+      try {
+        const response = await axios.get('http://localhost:7056/api/Subject/List');
+        if (response.data.status_code === 200) {
+          this.subjects = response.data.data.subjects;
+          // console.log(this.subjects)
+        } else {
+          console.error('Failed to fetch student data');
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    },
     async deleteStudent(id) {
       id = id
       try {
@@ -138,7 +153,7 @@ export default {
         } else {
           console.error('Failed to delete item.');
         }
-        this.alertCustomError("account removed!", "index: " + id + " account is removing complete!");
+        this.alertCustomError("account removed!", "index: " + id + " account remove completed!");
         this.fetchStudentList();
       } catch (error) {
         console.error('An error occurred:', error);
@@ -148,7 +163,7 @@ export default {
     },
     editStudent(student) {
       // Handle edit action here, for example, redirect to edit page
-      // this.$router.push(`/edit/${student.id}`);
+      this.$router.push(`/edit/${student.id}`);
     },
     alertCustomError(title, message,) {
       this.$buefy.dialog.alert({

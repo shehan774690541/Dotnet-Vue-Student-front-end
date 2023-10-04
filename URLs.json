@@ -1,0 +1,9 @@
+{
+    "Students_POST_AddData" : "https://localhost:44316/api/Student/save",
+    "Students_GET_List" : "https://localhost:44316/api/Student/List",
+    "Students_GET_id" : "https://localhost:44316/api/Student/",
+    "Students_PUT_id" : "https://localhost:44316/api/Student/",
+    "Students_DELETE_id" : "https://localhost:44316/api/Student/",
+    "Subjects_POST_AddData" : "https://localhost:44316/api/Subject/save",
+    "Subjects_GET_List" : "https://localhost:44316/api/Subject/List"
+}

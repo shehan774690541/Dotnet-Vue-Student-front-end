@@ -167,14 +167,14 @@ export default {
 
                     console.log(requestBody);
 
-                    axios.put(`http://localhost:7056/api/Student/${this.usr_id}`, requestBody)
+                    axios.put(`http://localhost:7056/api/Student/${this.usr_id}` , requestBody)
                         .then((response) => {
                             if (response.status === 200) {
-                                this.alertCustom("Successfull", `${this.usr_id} is edited!`, "is-success", "check");
+                                this.alertCustom("Successfull", `Your Edit is successful!`, "is-success", "check");
                                 console.log('Data edited successfully.');
                                 this.$router.push('/all_data');
                             } else {
-                                this.alertCustom("Error", "message", "is-ganger", "times-circle");
+                                this.alertCustom("Error", "Failed to edit data.", "is-ganger", "times-circle");
                                 console.error('Failed to edit data.');
                             }
                         })

@@ -20,7 +20,22 @@
               New Student
             </router-link>
           </b-navbar-item>
-          
+          <b-navbar-item>
+            <section>
+              <b-field>
+                <b-field>
+                  <b-radio-button v-model="radioButton" :native-value="false" type="is-success is-light is-outlined">
+                    <span>Students</span>
+                  </b-radio-button>
+
+                  <b-radio-button v-model="radioButton" :native-value="true" type="is-success is-light is-outlined">
+                    Subjects
+                  </b-radio-button>
+                </b-field>
+              </b-field>
+            </section>
+          </b-navbar-item>
+
         </template>
 
         <template #end>
@@ -34,9 +49,8 @@
       </b-navbar>
     </div>
 
-    <div class="vlv_search">
+    <div v-if="this.search_id != 0 || this.search_id != ''" class="vlv_search">
       <br><br>
-
       <b-notification v-if="first_name !== '-'" type="is-success">
         <div>
           <!-- <b-image :src="'http://localhost:7056/uploads/' + img"  style="height: 75px;"></b-image> -->
@@ -52,6 +66,10 @@
         <br>
         {{ issues_search }}
       </b-notification>
+    </div>
+
+    <div class="dataTables">
+      <b-table :data="data" :columns="columns"></b-table>
     </div>
   </div>
 </template>
@@ -73,14 +91,102 @@ export default {
       txt: null,
       issues_search: "enter user id and click search",
       img: "",
+      radioButton: false,
+      data: [],
+      columns: []
     };
   },
   created() {
-    // this.searchStudent();
+    this.fetchSubjectList()
+    this.fetchStudentList()
     this.search_id = 0
   },
+  watch: {
+    "radioButton": function () {
+      if (this.radioButton === true) {
+        this.fetchSubjectList()
+      }
+      else {
+        this.fetchStudentList()
+      }
+    }
+  },
   methods: {
-    async searchStudent() {
+    async fetchStudentList() {
+      try {
+        const response = await axios.get('http://localhost:7056/api/Student/List');
+        if (response.data.status_code === 200) {
+          this.data = response.data.data.students;
+          this.columns = [{
+            field: 'id',
+            label: 'ID',
+            width: '40',
+            numeric: true
+          },
+          {
+            field: 'first_name',
+            label: 'First Name',
+          },
+          {
+            field: 'last_name',
+            label: 'Last Name',
+          },
+          {
+            field: 'phone_number',
+            label: 'Phone',
+            centered: true
+          },
+          {
+            field: 'address',
+            label: 'Address',
+          },
+          {
+            field: 'email',
+            label: 'E - mail',
+          },
+          // {
+          //   field: '',
+          //   label: 'User Profile',
+          // 
+        ]
+          // console.log(this.data)
+          // <img src="http://localhost:7056/uploads/usr_shehan_123152369.png />"
+        } else {
+          console.error('Failed to fetch student data');
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    },
+    async fetchSubjectList() {
+      try {
+        const response = await axios.get('http://localhost:7056/api/Subject/List');
+        if (response.data.status_code === 200) {
+          this.data = response.data.data.subjects;
+          this.columns = [{
+            // Id	 Subject	 Check	
+            field: 'id',
+            label: 'ID',
+            width: '80',
+            numeric: true
+          },
+          {
+            field: 'subject',
+            label: 'Subject Name',
+          },
+          {
+            field: 'check',
+            label: 'Status',
+          }]
+          // console.log(this.data)
+        } else {
+          console.error('Failed to fetch student data');
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    }
+    , async searchStudent() {
       try {
 
         const response = await axios.get(`http://localhost:7056/api/Student/${this.search_id}`);
@@ -109,8 +215,8 @@ export default {
         console.error('An error occurred:', error);
       }
     },
-  },
-};
+  }
+}
 </script>
   
 <!-- <style scoped>
