@@ -1,9 +1,5 @@
 <template>
   <div class="container">
-    <!-- <br>
-    <hr>
-    <h1>Vue + .NET Database</h1>
-    <br> -->
     <div>
       <b-navbar>
         <template #start>
@@ -24,11 +20,11 @@
             <section>
               <b-field>
                 <b-field>
-                  <b-radio-button v-model="radioButton" :native-value="false" type="is-success is-light is-outlined">
+                  <b-radio-button v-model="radioButton" :native-value="true" type="is-success is-light is-outlined">
                     <span>Students</span>
                   </b-radio-button>
 
-                  <b-radio-button v-model="radioButton" :native-value="true" type="is-success is-light is-outlined">
+                  <b-radio-button v-model="radioButton" :native-value="false" type="is-success is-light is-outlined">
                     Subjects
                   </b-radio-button>
                 </b-field>
@@ -53,7 +49,6 @@
       <br><br>
       <b-notification v-if="first_name !== '-'" type="is-success">
         <div>
-          <!-- <b-image :src="'http://localhost:7056/uploads/' + img"  style="height: 75px;"></b-image> -->
           <img :src="'http://localhost:7056/uploads/' + img" height="200px" width="100px">
         </div>
         <p><b>First Name:</b> {{ first_name }}</p>
@@ -68,9 +63,52 @@
       </b-notification>
     </div>
 
-    <div class="dataTables">
-      <b-table :data="data" :columns="columns"></b-table>
-    </div>
+    <!-- <b-table :data="data" :columns="columns"></b-table> -->
+
+    <b-table :data="data" ref="table" detail-key="id" aria-next-label="Next page" aria-previous-label="Previous page"
+      aria-page-label="Page" aria-current-label="Current page">
+
+      <b-table-column field="id" label="ID" width="40" numeric v-slot="props">
+        {{ props.row.id }}
+      </b-table-column>
+
+      <b-table-column field="data.first_name" label="First Name" sortable v-slot="props" :visible="isStudent">
+        {{ props.row.first_name }}
+      </b-table-column>
+
+      <b-table-column field="data.last_name" label="Last Name" sortable v-slot="props" :visible="isStudent">
+        {{ props.row.last_name }}
+      </b-table-column>
+
+      <b-table-column field="data.phone_number" label="Phone" sortable centered v-slot="props" :visible="isStudent">
+        {{ props.row.phone_number }}
+      </b-table-column>
+
+      <b-table-column field="data.email" label="Email" sortble centered v-slot="props" :visible="isStudent">
+        {{ props.row.email }}
+      </b-table-column>
+
+      <b-table-column field="data.phone_number" label="Phone" sortble centered v-slot="props" :visible="isStudent">
+        {{ props.row.phone_number }}
+      </b-table-column>
+
+      <b-table-column field="data.subject" label="subject" sortble centered v-slot="props" :visible="isSubject">
+        {{ props.row.subject }}
+      </b-table-column>
+
+      <b-table-column field="data.check" label="check" sortble centered v-slot="props" :visible="isSubject">
+        {{ props.row.check }}
+      </b-table-column>
+
+      <b-table-column field="data.pic_url" label="Picture" width="90" sortble centered v-slot="props"
+        :visible="isStudent">
+        <p class="image is-64x64">
+          <img :src="'http://localhost:7056/uploads/' + props.row.pic_url" alt="Placeholder">
+        </p>
+      </b-table-column>
+    </b-table>
+
+
   </div>
 </template>
   
@@ -91,19 +129,21 @@ export default {
       txt: null,
       issues_search: "enter user id and click search",
       img: "",
-      radioButton: false,
+      radioButton: true,
       data: [],
-      columns: []
+      columns: [],
+      isStudent: true,
+      isSubject: true,
     };
   },
   created() {
-    this.fetchSubjectList()
-    this.fetchStudentList()
     this.search_id = 0
+    // this.fetchSubjectList()
+    this.fetchStudentList()
   },
   watch: {
     "radioButton": function () {
-      if (this.radioButton === true) {
+      if (this.radioButton === false) {
         this.fetchSubjectList()
       }
       else {
@@ -114,43 +154,19 @@ export default {
   methods: {
     async fetchStudentList() {
       try {
+        this.isStudent = true;
+        this.isSubject = false;
         const response = await axios.get('http://localhost:7056/api/Student/List');
         if (response.data.status_code === 200) {
           this.data = response.data.data.students;
-          this.columns = [{
-            field: 'id',
-            label: 'ID',
-            width: '40',
-            numeric: true
-          },
-          {
-            field: 'first_name',
-            label: 'First Name',
-          },
-          {
-            field: 'last_name',
-            label: 'Last Name',
-          },
-          {
-            field: 'phone_number',
-            label: 'Phone',
-            centered: true
-          },
-          {
-            field: 'address',
-            label: 'Address',
-          },
-          {
-            field: 'email',
-            label: 'E - mail',
-          },
-          // {
-          //   field: '',
-          //   label: 'User Profile',
-          // 
-        ]
-          // console.log(this.data)
-          // <img src="http://localhost:7056/uploads/usr_shehan_123152369.png />"
+          this.columns = [
+            { field: 'id', label: 'ID', width: '40', numeric: true },
+            { field: 'first_name', label: 'First Name', },
+            { field: 'last_name', label: 'Last Name', },
+            { field: 'phone_number', label: 'Phone', centered: true },
+            { field: 'address', label: 'Address', },
+            { field: 'email', label: 'E - mail', },
+          ]
         } else {
           console.error('Failed to fetch student data');
         }
@@ -163,22 +179,12 @@ export default {
         const response = await axios.get('http://localhost:7056/api/Subject/List');
         if (response.data.status_code === 200) {
           this.data = response.data.data.subjects;
-          this.columns = [{
-            // Id	 Subject	 Check	
-            field: 'id',
-            label: 'ID',
-            width: '80',
-            numeric: true
-          },
-          {
-            field: 'subject',
-            label: 'Subject Name',
-          },
-          {
-            field: 'check',
-            label: 'Status',
-          }]
-          // console.log(this.data)
+          this.isStudent = false;
+          this.isSubject = true;
+          this.columns = [
+            { field: 'id', label: 'ID', width: '80', numeric: true },
+            { field: 'subject', label: 'Subject Name', },
+            { field: 'check', label: 'Status', }]
         } else {
           console.error('Failed to fetch student data');
         }
@@ -218,60 +224,4 @@ export default {
   }
 }
 </script>
-  
-<!-- <style scoped>
-a {
-  text-decoration: none;
-  margin: 0px 20px 0px 20px;
-  padding: 5px 20px 5px 20px;
-  border-radius: 15px;
-  color: #222;
-  border: 1px solid #222;
-  transition: ease 0.26s;
-}
-
-a:hover {
-  background-color: #222;
-  color: #fff;
-  box-shadow: #444 0px 0px 8px 4px;
-}
-
-.vlv_search {
-  display: block;
-}
-
-.vlv_search input {
-  margin-right: -3px;
-  font-size: 1.2em;
-  padding: 4px;
-  border: solid 1px #222;
-  border-radius: 10px 0px 0px 10px;
-  text-align: right;
-  padding-right: 3px;
-}
-
-.vlv_search button {
-  margin-left: -3px;
-  font-size: 1.2em;
-  padding: 4px;
-  border: solid 1px #222;
-  border-radius: 0px 10px 10px 0px;
-}
-
-.vue_search_data {
-  margin-top: 10px;
-  width: 100%;
-  align-items: center;
-}
-
-.vue_search_data p {
-  margin: 5px;
-}
-
-.vue_search_data label {
-  font-size: 1.1em;
-  color: black;
-  /* text-transform: uppercase; */
-}
-</style> -->
   

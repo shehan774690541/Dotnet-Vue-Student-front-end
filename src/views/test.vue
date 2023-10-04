@@ -1,216 +1,225 @@
 <template>
-    <section>
-
-        <b-field grouped group-multiline>
-            <div class="control">
-                <b-switch v-model="showDetailIcon">Show detail icon</b-switch>
-            </div>
-            <div class="control">
-                <b-switch v-model="useTransition">Use transition (fade) when toggling details</b-switch>
-            </div>
-        </b-field>
-
-        <b-table
-            :data="data"
-            ref="table"
-            paginated
-            per-page="5"
-            :opened-detailed="defaultOpenedDetails"
-            detailed
-            detail-key="id"
-            :detail-transition="transitionName"
-            @details-open="(row) => $buefy.toast.open(`Expanded ${row.user.first_name}`)"
-            :show-detail-icon="showDetailIcon"
-            aria-next-label="Next page"
-            aria-previous-label="Previous page"
-            aria-page-label="Page"
-            aria-current-label="Current page">
-
-            <b-table-column field="id" label="ID" width="40" numeric v-slot="props">
-                {{ props.row.id }}
-            </b-table-column>
-
-            <b-table-column field="user.first_name" label="First Name" sortable v-slot="props">
-                <template v-if="showDetailIcon">
-                    {{ props.row.user.first_name }}
-                </template>
-                <template v-else>
-                    <a @click="props.toggleDetails(props.row)">
-                        {{ props.row.user.first_name }}
-                    </a>
-                </template>
-            </b-table-column>
-
-            <b-table-column field="user.last_name" label="Last Name" sortable v-slot="props">
-                {{ props.row.user.last_name }}
-            </b-table-column>
-
-            <b-table-column field="date" label="Date" sortable centered v-slot="props">
-                <span class="tag is-success">
-                    {{ new Date(props.row.date).toLocaleDateString() }}
-                </span>
-            </b-table-column>
-
-            <b-table-column label="Gender" v-slot="props">
-                <span>
-                    <b-icon pack="fas"
-                        :icon="props.row.gender === 'Male' ? 'mars' : 'venus'">
-                    </b-icon>
-                    {{ props.row.gender }}
-                </span>
-            </b-table-column>
-
-            <template #detail="props">
-                <article class="media">
-                    <figure class="media-left">
-                        <p class="image is-64x64">
-                            <img src="/static/img/placeholder-128x128.png">
-                        </p>
-                    </figure>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <strong>{{ props.row.user.first_name }} {{ props.row.user.last_name }}</strong>
-                                <small>@{{ props.row.user.first_name }}</small>
-                                <small>31m</small>
-                                <br>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                Proin ornare magna eros, eu pellentesque tortor vestibulum ut.
-                                Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.
-                            </p>
-                        </div>
-                    </div>
-                </article>
-            </template>
-        </b-table>
-
-    </section>
-</template>
-
-<script>
-    const data = require('@/data/sample.json')
-
-    export default {
-        data() {
-            return {
-                data,
-                defaultOpenedDetails: [1],
-                showDetailIcon: true,
-                useTransition: false
-            }
-        },
-        computed: {
-            transitionName() {
-                if (this.useTransition) {
-                    return 'fade'
-                }
-            }
-        }
-    }
-</script>
-
-
-
-
-
-
-
-
-
-
-<!-- ==================================================================================================================== -->
-
-
-<template>
+  <div class="container">
     <div>
-      <b-table :data="students" striped hoverable>
-        <b-table-column label="ID" field="id"></b-table-column>
-        <b-table-column label="First Name" field="first_name"></b-table-column>
-        <b-table-column label="Last Name" field="last_name"></b-table-column>
-        <b-table-column label="Address" field="address"></b-table-column>
-        <b-table-column label="Email" field="email"></b-table-column>
-        <b-table-column label="Phone" field="phone_number"></b-table-column>
-        
-        <b-table-column label="Picture">
-          <template slot-scope="props">
-            <img :src="'http://localhost:7056/uploads/' + props.row.pic_url" alt="User Picture" width="50px" height="50px">
-          </template>
-        </b-table-column>
-        <b-table-column label="Actions">
-          <template slot-scope="props">
-            <b-button @click="editStudent(props.row)" type="is-info" size="is-small">Edit</b-button>
-            <b-button @click="deleteStudent(props.row.id)" type="is-danger" size="is-small">Delete</b-button>
-          </template>
-        </b-table-column>
-      </b-table>
+      <b-navbar>
+        <template #start>
+          <b-navbar-item href="#" type="is-danger">
+            VUE APP
+          </b-navbar-item>
+          <b-navbar-item href="#">
+            <router-link to="/all_data">
+              All data
+            </router-link>
+          </b-navbar-item>
+          <b-navbar-item href="#">
+            <router-link to="/add_info">
+              New Student
+            </router-link>
+          </b-navbar-item>
+          <b-navbar-item>
+            <section>
+              <b-field>
+                <b-field>
+                  <b-radio-button v-model="radioButton" :native-value="false" type="is-success is-light is-outlined">
+                    <span>Students</span>
+                  </b-radio-button>
 
-      <!-- <d-table>
-        <d-table-column v-for="student in students" :key="student.id" :field=student.field :label="student.label" v-slot="props">
-          <span>{{ student.id }}</span>
-        </d-table-column>
-      </d-table> -->
+                  <b-radio-button v-model="radioButton" :native-value="true" type="is-success is-light is-outlined">
+                    Subjects
+                  </b-radio-button>
+                </b-field>
+              </b-field>
+            </section>
+          </b-navbar-item>
 
-      <div class="add_new">
-        <router-link to="/add_info">
-          <b-button type="is-primary" size="is-large">
-            <b-icon icon="plus"></b-icon>
-          </b-button>
-        </router-link>
-      </div>
+        </template>
+
+        <template #end>
+          <b-navbar-item tag="div">
+            <b-field>
+              <b-input type="number" v-model="search_id" @input="searchStudent"></b-input>
+              <b-button @click="searchStudent">SEARCH</b-button>
+            </b-field>
+          </b-navbar-item>
+        </template>
+      </b-navbar>
     </div>
-  </template>
+
+    <div v-if="this.search_id != 0 || this.search_id != ''" class="vlv_search">
+      <br><br>
+      <b-notification v-if="first_name !== '-'" type="is-success">
+        <div>
+          <img :src="'http://localhost:7056/uploads/' + img" height="200px" width="100px">
+        </div>
+        <p><b>First Name:</b> {{ first_name }}</p>
+        <p><b>Last Name:</b> {{ last_name }}</p>
+        <p><b>Address:</b> {{ address }}</p>
+        <p><b>Email:</b> {{ email }}</p>
+        <p><b>Phone:</b> {{ phone_number }}</p>
+      </b-notification>
+      <b-notification v-else type="is-danger">
+        <br>
+        {{ issues_search }}
+      </b-notification>
+    </div>
+
+    <!-- <b-table :data="data" :columns="columns"></b-table> -->
+
+    <b-table :data="data" ref="table"  
+      detail-key="id"  aria-next-label="Next page" aria-previous-label="Previous page"
+      aria-page-label="Page" aria-current-label="Current page">
+
+      <b-table-column field="id" label="ID" width="40" numeric v-slot="props">
+        {{ props.row.id }}
+      </b-table-column>
+
+      <b-table-column field="data.first_name" label="First Name" sortable v-slot="props" >
+        {{ props.row.first_name }}
+      </b-table-column>
+
+      <b-table-column field="data.last_name" label="Last Name" sortable v-slot="props">
+        {{ props.row.last_name }}
+      </b-table-column>
+
+      <b-table-column field="data.phone_number" label="Phone" sortable centered v-slot="props">
+        {{ props.row.phone_number }}
+      </b-table-column>
+
+      <b-table-column field="data.email" label="Email" sortble centered v-slot="props">
+        {{ props.row.email }}
+      </b-table-column>
+
+      <b-table-column field="data.phone_number" label="Phone" sortble centered v-slot="props">
+        {{ props.row.phone_number }}
+      </b-table-column>
+
+      <b-table-column field="data.subject" label="subject" sortble centered v-slot="props">
+        {{ props.row.subject }}
+      </b-table-column>
+
+      <b-table-column field="data.check" label="check" sortble centered v-slot="props">
+        {{ props.row.check }}
+      </b-table-column>
+
+      <b-table-column field="data.pic_url" label="Picture" width="90" sortble centered v-slot="props">
+        <p class="image is-64x64">
+          <img :src="'http://localhost:7056/uploads/' + props.row.pic_url" alt="Placeholder">
+        </p>
+      </b-table-column>
+    </b-table>
+
+
+  </div>
+</template>
   
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        students: []
-      };
-    },
-    created() {
-      this.fetchStudentList();
-    },
-    methods: {
-      async fetchStudentList() {
-        try {
-          const response = await axios.get('http://localhost:7056/api/Student/List');
-          if (response.data.status_code === 200) {
-            this.students = response.data.data.students;
-          } else {
-            console.error('Failed to fetch student data');
-          }
-        } catch (error) {
-          console.error('An error occurred:', error);
-        }
-      },
-      async deleteStudent(id) {
-        try {
-          const response = await axios.delete(`http://localhost:7056/api/Student/${id}`);
-          if (response.status === 204) {
-            console.log('Item deleted successfully.');
-            this.fetchStudentList(); // Refresh the table after deletion
-          } else {
-            console.error('Failed to delete item.');
-          }
-        } catch (error) {
-          console.error('An error occurred:', error);
-        }
-      },
-      editStudent(student) {
-        // Handle edit action here, for example, redirect to edit page
-        // this.$router.push(`/edit/${student.id}`);
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'home_page',
+  data() {
+    return {
+      search_id: 0,
+      first_name: '-',
+      last_name: '-',
+      address: '-',
+      email: '-',
+      phone_number: '-',
+      search_id: null,
+      txt: null,
+      issues_search: "enter user id and click search",
+      img: "",
+      radioButton: false,
+      data: [],
+      columns: []
+    };
+  },
+  created() {
+    this.fetchSubjectList()
+    this.fetchStudentList()
+    this.search_id = 0
+  },
+  watch: {
+    "radioButton": function () {
+      if (this.radioButton === true) {
+        this.fetchSubjectList()
+      }
+      else {
+        this.fetchStudentList()
       }
     }
-  };
-  </script>
-  
-  <style scoped>
-  .add_new {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+  },
+  methods: {
+    columnVisible(clm){
+      console.log(clm);
+      return true
+    },
+    async fetchStudentList() {
+      try {
+        const response = await axios.get('http://localhost:7056/api/Student/List');
+        if (response.data.status_code === 200) {
+          this.data = response.data.data.students;
+          this.columns = [
+            { field: 'id', label: 'ID', width: '40', numeric: true },
+            { field: 'first_name', label: 'First Name', },
+            { field: 'last_name', label: 'Last Name', },
+            { field: 'phone_number', label: 'Phone', centered: true },
+            { field: 'address', label: 'Address', },
+            { field: 'email', label: 'E - mail', },
+          ]
+        } else {
+          console.error('Failed to fetch student data');
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    },
+    async fetchSubjectList() {
+      try {
+        const response = await axios.get('http://localhost:7056/api/Subject/List');
+        if (response.data.status_code === 200) {
+          this.data = response.data.data.subjects;
+          this.columns = [
+            { field: 'id', label: 'ID', width: '80', numeric: true },
+            { field: 'subject', label: 'Subject Name', },
+            { field: 'check', label: 'Status', }]
+        } else {
+          console.error('Failed to fetch student data');
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    }
+    , async searchStudent() {
+      try {
+
+        const response = await axios.get(`http://localhost:7056/api/Student/${this.search_id}`);
+        if (response.data.status_code === 200) {
+          const student = response.data.data.student;
+          this.first_name = student.first_name;
+          this.last_name = student.last_name;
+          this.address = student.address;
+          this.email = student.email;
+          this.phone_number = student.phone_number;
+          this.img = student.pic_url;
+
+        } else {
+          this.first_name = '-';
+          this.issues_search = "invalid search id";
+          console.error('Failed to fetch student data');
+        }
+      } catch (error) {
+        this.first_name = '-';
+        if (this.search_id == "") {
+          this.issues_search = "Empty Input!";
+        } else {
+          this.issues_search = "Connections problem!";
+        }
+
+        console.error('An error occurred:', error);
+      }
+    },
   }
-  </style>
+}
+</script>
   
