@@ -161,7 +161,14 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 @import 'https://use.fontawesome.com/releases/v5.2.0/css/all.css';
 @import 'https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css';
+
+.getHome{
+  position: fixed;
+  bottom: 20px;
+  left: 10px;
+  /* display: none; */
+}
 </style>

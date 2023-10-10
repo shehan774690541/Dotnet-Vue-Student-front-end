@@ -6,6 +6,10 @@ import home from '@/views/home_page.vue';
 import edit_student from '@/views/test.vue';
 import all_data from '@/views/all_data.vue';
 import edit from '@/views/edit.vue';
+import students from '@/views/students/students.vue';
+import subjects from '@/views/subjects/subjects.vue';
+import subjectTable from '@/views/tables/subjectTable.vue';
+import studentsTable from '@/views/tables/studentTable.vue';
 
 Vue.use(Router)
  
@@ -40,6 +44,25 @@ export default new Router({
       name: 'edit',
       component: edit,
     },
-
+    {
+      path: '/students',
+      name: 'students',
+      component: students,
+    },
+    {
+      path: '/subjects',
+      name: 'subjects',
+      component: subjects,
+    },
+    {
+      path: '/subjectTable',
+      name: 'subjectTable',
+      component: subjectTable,
+    },
+    {
+      path: '/studentTable',
+      name: 'studentTable',
+      component: studentsTable,
+    },
   ]
 })
