@@ -10,6 +10,7 @@ import students from '@/views/students/students.vue';
 import subjects from '@/views/subjects/subjects.vue';
 import subjectTable from '@/views/tables/subjectTable.vue';
 import studentsTable from '@/views/tables/studentTable.vue';
+import addInfo from '@/components/addInfo.vue'
 
 Vue.use(Router)
  
@@ -63,6 +64,11 @@ export default new Router({
       path: '/studentTable',
       name: 'studentTable',
       component: studentsTable,
+    },
+    {
+      path: '/addInfo',
+      name: 'addInfo',
+      component: addInfo,
     },
   ]
 })
