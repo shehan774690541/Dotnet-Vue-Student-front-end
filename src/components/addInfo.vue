@@ -1,12 +1,10 @@
 <template>
-  <section>
+  <section class="container">
     <br />
     <h1 class="title has-text-centered">Students Informations</h1>
     <br />
 
-    <b-steps
-      v-model="activeStep"
-    >
+    <b-steps v-model="activeStep">
       <b-step-item step="1" label="Name" :clickable="isStepsClickable">
         <YourName />
       </b-step-item>
@@ -38,8 +36,7 @@
         <yourPicture />
       </b-step-item>
 
-      <template v-if="false" #navigation="{ previous, next }" >
-        
+      <template v-if="false" #navigation="{ previous, next }">
         <b-button
           outlined
           type="is-danger"
@@ -60,8 +57,11 @@
         >
           Next
         </b-button>
+        <!-- <input v-model="inputValue"> -->
       </template>
     </b-steps>
+
+    <p> pinia : {{ store.inputValue }}</p>
   </section>
 </template>
 
@@ -70,23 +70,39 @@ import YourName from "@/views/addInfo/name.vue";
 import YourAddress from "@/views/addInfo/address.vue";
 import YourContact from "@/views/addInfo/contact.vue";
 import yourPicture from "@/views/addInfo/picture.vue";
+import dbSave from "./../database/addInfo.json";
+import { useStore } from './../store/store'
 
 export default {
-    data(){
-        return{
-            activeStep:'',
-            isStepsClickable:'',
-            isProfileSuccess:'',
-            showSocial:'',
-            rounded:null,
-
-        }
-    },
   components: {
     YourName,
     YourAddress,
     YourContact,
     yourPicture,
+  },
+  data() {
+    return {
+      activeStep: "",
+      isStepsClickable: "",
+      isProfileSuccess: "",
+      showSocial: "",
+      rounded: null,
+      users: dbSave,
+
+      // inputValue:null,
+    };
+  },
+  watch: {
+    inputValue(newValue) {
+      this.$store.inputValue = newValue;
+    },
+  },
+  setup() {
+    const store = useStore();
+    
+    return {
+      store,
+    };
   },
 };
 </script>

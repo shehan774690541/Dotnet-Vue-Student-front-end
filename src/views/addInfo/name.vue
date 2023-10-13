@@ -5,39 +5,43 @@
       <b-field label="First Name">
         <b-input v-model="fName" @input="createName"></b-input>
       </b-field>
-      <br><br>
+      <br /><br />
       <b-field label="Last Name">
         <b-input v-model="lName" @input="createName"></b-input>
       </b-field>
-<object data="
 
-
-
-
-" type=""></object>
+      <!-- <input :value="modelValue" @input="$emit('input', $event.target.value)" /> -->
     </div>
   </div>
 </template>
   
 <script>
 export default {
-    data(){
-        return{
-            name:"Your Name",
-            fName:'',
-            lName:'',
-        }
+  data() {
+    return {
+      name: "Your Name",
+      fName: "",
+      lName: "",
+      formData: {
+        fName: this.fName,
+        lName: this.lName,
+      },
+      // modelValue:'',
+    };
+  },
+  methods: {
+    createName() {
+      if (this.fName == "" && this.lName == "") {
+        this.name = "Your Name";
+      } else {
+        this.name = this.fName + " " + this.lName;
+        this.saveData();
+      }
     },
-    methods:{
-        createName(){
-            if(this.fName == '' && this.lName == ''){
-                this.name = "Your Name"
-            }
-            else{
-                this.name = this.fName + " " + this.lName 
-            }
-        }
-    }
+    // props: {
+    //   modelValue: String,
+    // },
+  },
 };
 </script>
 
