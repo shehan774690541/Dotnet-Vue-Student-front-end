@@ -3,13 +3,13 @@ import { defineStore } from 'pinia';
 export const useStore = defineStore({
   id: 'store',
   state: () => ({
-    inputValue: 'yo',
+    firstName :'',
+    lastName:'',
+    address:'',
+    phone:'',
+    email:'',
+    image:null,
   }),
-  actions: {
-    setInputValue(value) {
-      this.inputValue = value;
-    },
-  },
 });
 
 // getter

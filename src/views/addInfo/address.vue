@@ -1,11 +1,16 @@
 <template>
   <div class="bgDiv">
     <div class="content">
-        <br>
-        <p class="has-text-centered">{{ address }}</p>
-        <br>
-      <b-field label="Select Your Distric"  @input="createAddress">
-        <b-select v-model="distric" placeholder="Select your Distric" icon="account" expanded>
+      <br />
+      <p class="has-text-centered">{{ address }}</p>
+      <br />
+      <b-field label="Select Your Distric" @input="createAddress">
+        <b-select
+          v-model="distric"
+          placeholder="Select your Distric"
+          icon="account"
+          expanded
+        >
           <optgroup label="Western Province:">
             <option value="Colombo">Colombo</option>
             <option value="Gampaha">Gampaha</option>
@@ -60,29 +65,35 @@
         </b-select>
       </b-field>
 
-      <br><br>
+      <br /><br />
       <b-field label="Your Address">
-        <b-input v-model="adr" @input="createAddress"></b-input>
+        <b-input v-model="store.address" @input="createAddress"></b-input>
       </b-field>
     </div>
-
   </div>
 </template>
 
 <script>
+import { useStore } from "./../../store/store";
 export default {
-    data(){
-        return{
-            address:"Your address",
-            distric:'',
-            adr:'',
-        }
+  data() {
+    return {
+      address: "Your address",
+      distric: "",
+      adr: "",
+    };
+  },
+  setup() {
+    const store = useStore();
+    return {
+      store,
+    };
+  },
+  methods: {
+    createAddress() {
+      this.address = this.adr + ", " + this.distric;
     },
-    methods:{
-        createAddress(){
-            this.address = this.adr + ", " + this.distric
-        }
-    }
+  },
 };
 </script>
 

@@ -2,9 +2,9 @@
   <div class="bgDiv">
     <div class="content">
       <b-field label="">
-        <b-field class="file" :class="{ 'has-name': !!file2 }">
+        <b-field class="file" :class="{ 'has-name': !! store.image }">
           <b-upload
-            v-model="file2"
+            v-model="store.image"
             class="file-label"
             rounded
             @input="viewImage()"
@@ -13,39 +13,49 @@
               <b-icon class="file-icon" icon="upload"></b-icon>
               <span class="file-label">Click to upload</span>
             </span>
-            <span class="file-name" v-if="file2">
-              {{ file2.name }}
+            <span class="file-name" v-if="store.image">
+              {{ store.image.name }}
             </span>
           </b-upload>
         </b-field>
       </b-field>
 
-      <img v-if="imageSrc" :src="imageSrc" style="height: 60vh; width: auto;" alt="Uploaded Image">
-
+      <img
+        v-if="imageSrc"
+        :src="imageSrc"
+        style="height: 60vh; width: auto"
+        alt="Uploaded Image"
+      />
     </div>
   </div>
 </template>
     
     <script>
+import { useStore } from "./../../store/store";
 export default {
   data() {
     return {
       file: {},
-      file2: null,
       rounded: null,
-      imageSrc:null
+      imageSrc: null,
     };
   },
-//   watch:{
-//     "file2":function(){
-//         this.viewImage()
-//     }
-//   },
+  setup() {
+    const store = useStore();
+    return {
+      store,
+    };
+  },
+  setup() {
+    const store = useStore();
+    return {
+      store,
+    };
+  },
   methods: {
     viewImage() {
-      if (this.file2) {
-        this.imageSrc = URL.createObjectURL(this.file2);
-
+      if (this.store.image) {
+        this.imageSrc = URL.createObjectURL(this.store.image);
       } else {
         this.imageSrc = null;
       }

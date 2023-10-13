@@ -1,47 +1,34 @@
 <template>
   <div class="bgDiv">
     <div class="content">
-      <h4 class="title has-text-centered">{{ name }}</h4>
+      <h4 class="title has-text-centered">{{ store.firstName }} {{ store.lastName }}</h4>
       <b-field label="First Name">
-        <b-input v-model="fName" @input="createName"></b-input>
+        <b-input v-model="store.firstName" ></b-input>
       </b-field>
       <br /><br />
       <b-field label="Last Name">
-        <b-input v-model="lName" @input="createName"></b-input>
+        <b-input v-model="store.lastName" ></b-input>
       </b-field>
-
-      <!-- <input :value="modelValue" @input="$emit('input', $event.target.value)" /> -->
     </div>
   </div>
 </template>
   
 <script>
+import { useStore } from './../../store/store'
+
 export default {
-  data() {
+  setup() {
+    const store = useStore();
     return {
-      name: "Your Name",
-      fName: "",
-      lName: "",
-      formData: {
-        fName: this.fName,
-        lName: this.lName,
-      },
-      // modelValue:'',
+      store,
     };
   },
-  methods: {
-    createName() {
-      if (this.fName == "" && this.lName == "") {
-        this.name = "Your Name";
-      } else {
-        this.name = this.fName + " " + this.lName;
-        this.saveData();
-      }
-    },
-    // props: {
-    //   modelValue: String,
-    // },
+  data() {
+    return {
+    };
   },
+  
+  
 };
 </script>
 

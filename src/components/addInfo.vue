@@ -60,8 +60,7 @@
         <!-- <input v-model="inputValue"> -->
       </template>
     </b-steps>
-
-    <p> pinia : {{ store.inputValue }}</p>
+    <b-button>submit</b-button>
   </section>
 </template>
 
