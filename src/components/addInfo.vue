@@ -44,6 +44,7 @@
           icon-left="backward"
           :disabled="previous.disabled"
           @click.prevent="previous.action"
+          style="position: fixed;"
         >
           Previous
         </b-button>
@@ -56,11 +57,16 @@
           @click.prevent="next.action"
         >
           Next
-        </b-button>
+        </b-button >
+
+        <b-button >next</b-button>
+        hi
         <!-- <input v-model="inputValue"> -->
       </template>
     </b-steps>
-    <b-button>submit</b-button>
+    <b-button @click="addData()" class="submitButton">submit</b-button>
+    <br><br>
+    <hr>
   </section>
 </template>
 
@@ -70,7 +76,8 @@ import YourAddress from "@/views/addInfo/address.vue";
 import YourContact from "@/views/addInfo/contact.vue";
 import yourPicture from "@/views/addInfo/picture.vue";
 import dbSave from "./../database/addInfo.json";
-import { useStore } from './../store/store'
+import { useStore } from "./../store/store";
+import axios from "axios";
 
 export default {
   components: {
@@ -87,7 +94,7 @@ export default {
       showSocial: "",
       rounded: null,
       users: dbSave,
-
+      exp: null,
       // inputValue:null,
     };
   },
@@ -96,9 +103,51 @@ export default {
       this.$store.inputValue = newValue;
     },
   },
+  methods: {
+    async addData() {
+      try {
+        const fileInput = this.store.image;
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const base64String = reader.result;
+          const base64ImageWithoutPrefix = base64String.split(',')[1];
+          this.base64Image = base64ImageWithoutPrefix;
+
+          let requestBody = {
+            first_name: this.store.firstName,
+            last_name: this.store.lastName,
+            address: this.store.address,
+            email: this.store.email,
+            phone_number: this.store.phone,
+            pic_url: this.base64Image,
+          };
+
+          console.log(requestBody)
+          axios.post('http://localhost:7056/api/Student/save', requestBody)
+            .then((response) => {
+              console.log("sending...");
+              if (response.status === 201) {
+                alert("Data added successfully.");
+                console.log('Data added successfully.');
+                this.$router.push('/');
+              }
+              this.$router.push('/')
+            })
+            .catch((error) => {
+              console.error('An error occurred:', error);
+            });
+        };
+
+        reader.readAsDataURL(fileInput);
+      } catch (error) {
+        console.error('An error occurred:', error);
+      }
+    }
+  },
   setup() {
     const store = useStore();
-    
+
     return {
       store,
     };
@@ -107,4 +156,9 @@ export default {
 </script>
 
 <style scoped>
+.submitButton{
+  position: absolute;
+  right:20vh;
+}
+
 </style>

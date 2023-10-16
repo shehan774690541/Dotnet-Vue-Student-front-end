@@ -8,7 +8,7 @@
             <router-link to="/studentTable"> All data </router-link>
           </b-navbar-item>
           <b-navbar-item href="#">
-            <router-link to="/add_info"> New Student </router-link>
+            <router-link to="/addInfo"> New Student </router-link>
           </b-navbar-item>
           <b-navbar-item>
             <section>
@@ -50,7 +50,7 @@
       </b-navbar>
     </div>
 
-    <div v-if="this.search_id != 0 || this.search_id != ''" class="vlv_search">
+    <!-- <div v-if="this.search_id != 0 || this.search_id != ''" class="vlv_search">
       <br /><br />
       <b-notification v-if="first_name !== '-'" type="is-success">
         <div>
@@ -70,11 +70,11 @@
         <br />
         {{ issues_search }}
       </b-notification>
-    </div>
+    </div> -->
 
-    <b-table :data="data" :columns="columns"></b-table>
+    <!-- <b-table :data="data" :columns="columns"></b-table> -->
 
-    <!-- <b-table :data="data" ref="table" detail-key="id" aria-next-label="Next page" aria-previous-label="Previous page"
+    <b-table :data="data" ref="table" detail-key="id" aria-next-label="Next page" aria-previous-label="Previous page"
       aria-page-label="Page" aria-current-label="Current page">
 
       <b-table-column field="id" label="ID" width="40" numeric v-slot="props">
@@ -115,7 +115,7 @@
           <img :src="'http://localhost:7056/uploads/' + props.row.pic_url" alt="Placeholder">
         </p>
       </b-table-column>
-    </b-table> -->
+    </b-table>
   </div>
 </template>
   
@@ -145,7 +145,6 @@ export default {
   },
   created() {
     this.search_id = 0;
-    // this.fetchSubjectList()
     this.fetchStudentList();
   },
   watch: {

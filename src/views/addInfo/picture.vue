@@ -2,7 +2,7 @@
   <div class="bgDiv">
     <div class="content">
       <b-field label="">
-        <b-field class="file" :class="{ 'has-name': !! store.image }">
+        <b-field class="file" :class="{ 'has-name': !!store.image }">
           <b-upload
             v-model="store.image"
             class="file-label"
@@ -23,7 +23,7 @@
       <img
         v-if="imageSrc"
         :src="imageSrc"
-        style="height: 60vh; width: auto"
+        style="height: 50vh; width: auto"
         alt="Uploaded Image"
       />
     </div>

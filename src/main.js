@@ -11,6 +11,22 @@ const pinia = createPinia()
 
 Vue.use(Buefy)
 
+pinia.use((context)=>{
+  console.log(context)
+  const productStoreId = context.store.$id
+  console.log(productStoreId)
+
+  // sync data from store ---------------
+  const fromLocalStorageProducts = JSON.parse(localStorage.getItem(productStoreId))
+  if(fromLocalStorageProducts){
+    context.store.$patch(fromLocalStorageProducts)
+  }
+
+  // listen to changes and update local storage --------------
+  context.store.$subscribe((mutation,state)=>{
+    localStorage.setItem(productStoreId,JSON.stringify(state))
+  })
+})
 
 Vue.config.productionTip = false;
 

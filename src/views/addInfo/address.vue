@@ -2,9 +2,8 @@
   <div class="bgDiv">
     <div class="content">
       <br />
-      <p class="has-text-centered">{{ address }}</p>
-      <br />
-      <b-field label="Select Your Distric" @input="createAddress">
+      <p class="has-text-centered">{{ store.address }}</p>
+      <!-- <b-field label="Select Your Distric" @input="createAddress()">
         <b-select
           v-model="distric"
           placeholder="Select your Distric"
@@ -63,11 +62,11 @@
             <option value="Ratnapura">Ratnapura</option>
           </optgroup>
         </b-select>
-      </b-field>
+      </b-field> -->
 
       <br /><br />
       <b-field label="Your Address">
-        <b-input v-model="store.address" @input="createAddress"></b-input>
+        <b-input v-model="store.address"></b-input>
       </b-field>
     </div>
   </div>
@@ -90,9 +89,6 @@ export default {
     };
   },
   methods: {
-    createAddress() {
-      this.address = this.adr + ", " + this.distric;
-    },
   },
 };
 </script>
