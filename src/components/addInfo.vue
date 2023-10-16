@@ -44,7 +44,7 @@
           icon-left="backward"
           :disabled="previous.disabled"
           @click.prevent="previous.action"
-          style="position: fixed;"
+          style="position: fixed"
         >
           Previous
         </b-button>
@@ -57,16 +57,20 @@
           @click.prevent="next.action"
         >
           Next
-        </b-button >
+        </b-button>
 
-        <b-button >next</b-button>
+        <b-button>next</b-button>
         hi
         <!-- <input v-model="inputValue"> -->
       </template>
     </b-steps>
-    <b-button @click="addData()" class="submitButton">submit</b-button>
-    <br><br>
-    <hr>
+    <div class="btns">
+      <b-button @click="resetData()" class="submitButton">Reset</b-button>
+      <b-button @click="addData()" class="submitButton">submit</b-button>
+    </div>
+
+    <br /><br />
+    <hr />
   </section>
 </template>
 
@@ -103,6 +107,12 @@ export default {
       this.$store.inputValue = newValue;
     },
   },
+  setup() {
+    const store = useStore();
+    return {
+      store,
+    };
+  },
   methods: {
     async addData() {
       try {
@@ -111,7 +121,7 @@ export default {
 
         reader.onload = () => {
           const base64String = reader.result;
-          const base64ImageWithoutPrefix = base64String.split(',')[1];
+          const base64ImageWithoutPrefix = base64String.split(",")[1];
           this.base64Image = base64ImageWithoutPrefix;
 
           let requestBody = {
@@ -123,27 +133,42 @@ export default {
             pic_url: this.base64Image,
           };
 
-          console.log(requestBody)
-          axios.post('http://localhost:7056/api/Student/save', requestBody)
+          console.log(requestBody);
+          axios
+            .post("http://localhost:7056/api/Student/save", requestBody)
             .then((response) => {
               console.log("sending...");
               if (response.status === 201) {
                 alert("Data added successfully.");
-                console.log('Data added successfully.');
-                this.$router.push('/');
+                console.log("Data added successfully.");
+                this.$router.push("/");
               }
-              this.$router.push('/')
+              this.$router.push("/");
             })
             .catch((error) => {
-              console.error('An error occurred:', error);
+              console.error("An error occurred:", error);
             });
         };
 
         reader.readAsDataURL(fileInput);
       } catch (error) {
-        console.error('An error occurred:', error);
+        console.error("An error occurred:", error);
       }
-    }
+    },
+    resetData() {
+      try {
+        const storeId = this.store.$id;
+        console.log(this.store);
+
+        if (localStorage.getItem(storeId)) {
+          this.store.$reset();
+          localStorage.removeItem(storeId);
+          // window.location.replace("/addInfo");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   setup() {
     const store = useStore();
@@ -156,9 +181,11 @@ export default {
 </script>
 
 <style scoped>
-.submitButton{
+.btns {
   position: absolute;
-  right:20vh;
+  right: 20vh;
 }
-
+.submitButton {
+  margin: 10px;
+}
 </style>

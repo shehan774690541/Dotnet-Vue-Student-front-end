@@ -13,18 +13,18 @@ Vue.use(Buefy)
 
 pinia.use((context)=>{
   console.log(context)
-  const productStoreId = context.store.$id
-  console.log(productStoreId)
+  const useStoreId = context.store.$id
+  console.log(useStoreId)
 
   // sync data from store ---------------
-  const fromLocalStorageProducts = JSON.parse(localStorage.getItem(productStoreId))
+  const fromLocalStorageProducts = JSON.parse(localStorage.getItem(useStoreId))
   if(fromLocalStorageProducts){
     context.store.$patch(fromLocalStorageProducts)
   }
 
   // listen to changes and update local storage --------------
   context.store.$subscribe((mutation,state)=>{
-    localStorage.setItem(productStoreId,JSON.stringify(state))
+    localStorage.setItem(useStoreId,JSON.stringify(state))
   })
 })
 
