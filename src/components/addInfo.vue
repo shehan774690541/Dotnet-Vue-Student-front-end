@@ -142,7 +142,7 @@ export default {
                 this.alertCustom("added", "Successfull Add New Data!", "is-success", "check")
                 console.log("Data added successfully.");
               }
-              this.$router.push("/");
+              this.$router.push("/gi");
             })
             .catch((error) => {
               console.error("An error occurred:", error);
