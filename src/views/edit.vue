@@ -172,7 +172,7 @@ export default {
                             if (response.status === 200) {
                                 this.alertCustom("Successfull", `Your Edit is successful!`, "is-success", "check");
                                 console.log('Data edited successfully.');
-                                this.$router.push('/all_data');
+                                this.$router.push('/home_page');
                             } else {
                                 this.alertCustom("Error", "Failed to edit data.", "is-ganger", "times-circle");
                                 console.error('Failed to edit data.');
@@ -204,7 +204,7 @@ export default {
                                 if (response.status === 200) {
                                     this.alertCustom("Successfull", `${this.usr_id} is edited!`, "is-success", "check");
                                     console.log('Data edited successfully.');
-                                    this.$router.push('/all_data');
+                                    this.$router.push('/home_page');
                                 } else {
                                     this.alertCustom("Error", "message", "is-ganger", "times-circle");
                                     console.error('Failed to edit data.');
@@ -215,13 +215,9 @@ export default {
                             });
                     };
                 }
-
-
-
                 reader.readAsDataURL(fileInput);
             } catch (error) {
-                // alert("Connections error.\n" + error);
-                console.error('An error occurred:', error);
+                console.log(error);
             }
         },
 

@@ -50,7 +50,7 @@
       </b-navbar>
     </div>
 
-    <!-- <div v-if="this.search_id != 0 || this.search_id != ''" class="vlv_search">
+    <div v-if="this.search_id != 0 || this.search_id != ''" class="vlv_search">
       <br /><br />
       <b-notification v-if="first_name !== '-'" type="is-success">
         <div>
@@ -70,49 +70,124 @@
         <br />
         {{ issues_search }}
       </b-notification>
-    </div> -->
+    </div>
 
     <!-- <b-table :data="data" :columns="columns"></b-table> -->
 
-    <b-table :data="data" ref="table" detail-key="id" aria-next-label="Next page" aria-previous-label="Previous page"
-      aria-page-label="Page" aria-current-label="Current page">
-
+    <b-table
+      :data="data"
+      ref="table"
+      detail-key="id"
+      aria-next-label="Next page"
+      aria-previous-label="Previous page"
+      aria-page-label="Page"
+      aria-current-label="Current page"
+    >
       <b-table-column field="id" label="ID" width="40" numeric v-slot="props">
         {{ props.row.id }}
       </b-table-column>
 
-      <b-table-column field="data.first_name" label="First Name" sortable v-slot="props" :visible="isStudent">
+      <b-table-column
+        :visible="isStudent"
+        field="id"
+        label="#"
+        width="40"
+        numeric
+        v-slot="props"
+      >
+        <b-button @click="edit_ithems(props.row.id)">Change</b-button>
+        <b-button @click="deleteItem(props.row.id)">Remove</b-button>
+      </b-table-column>
+
+      <b-table-column
+        field="data.first_name"
+        label="First Name"
+        sortable
+        v-slot="props"
+        :visible="isStudent"
+      >
         {{ props.row.first_name }}
       </b-table-column>
 
-      <b-table-column field="data.last_name" label="Last Name" sortable v-slot="props" :visible="isStudent">
+      <b-table-column
+        field="data.last_name"
+        label="Last Name"
+        sortable
+        v-slot="props"
+        :visible="isStudent"
+      >
         {{ props.row.last_name }}
       </b-table-column>
 
-      <b-table-column field="data.phone_number" label="Phone" sortable centered v-slot="props" :visible="isStudent">
+      <b-table-column
+        field="data.phone_number"
+        label="Phone"
+        sortable
+        centered
+        v-slot="props"
+        :visible="isStudent"
+      >
         {{ props.row.phone_number }}
       </b-table-column>
 
-      <b-table-column field="data.email" label="Email" sortble centered v-slot="props" :visible="isStudent">
+      <b-table-column
+        field="data.email"
+        label="Email"
+        sortble
+        centered
+        v-slot="props"
+        :visible="isStudent"
+      >
         {{ props.row.email }}
       </b-table-column>
 
-      <b-table-column field="data.phone_number" label="Phone" sortble centered v-slot="props" :visible="isStudent">
+      <b-table-column
+        field="data.phone_number"
+        label="Phone"
+        sortble
+        centered
+        v-slot="props"
+        :visible="isStudent"
+      >
         {{ props.row.phone_number }}
       </b-table-column>
 
-      <b-table-column field="data.subject" label="subject" sortble centered v-slot="props" :visible="isSubject">
+      <b-table-column
+        field="data.subject"
+        label="subject"
+        sortble
+        centered
+        v-slot="props"
+        :visible="isSubject"
+      >
         {{ props.row.subject }}
       </b-table-column>
 
-      <b-table-column field="data.check" label="check" sortble centered v-slot="props" :visible="isSubject">
+      <b-table-column
+        field="data.check"
+        label="check"
+        sortble
+        centered
+        v-slot="props"
+        :visible="isSubject"
+      >
         {{ props.row.check }}
       </b-table-column>
 
-      <b-table-column field="data.pic_url" label="Picture" width="90" sortble centered v-slot="props"
-        :visible="isStudent">
+      <b-table-column
+        field="data.pic_url"
+        label="Picture"
+        width="90"
+        sortble
+        centered
+        v-slot="props"
+        :visible="isStudent"
+      >
         <p class="image is-64x64">
-          <img :src="'http://localhost:7056/uploads/' + props.row.pic_url" alt="Placeholder">
+          <img
+            :src="'http://localhost:7056/uploads/' + props.row.pic_url"
+            alt="Placeholder"
+          />
         </p>
       </b-table-column>
     </b-table>
@@ -230,6 +305,39 @@ export default {
 
         console.error("An error occurred:", error);
       }
+    },
+    async edit_ithems(edit_id) {
+      this.$router.push(`/edit?id=${edit_id}`);
+    },
+    async deleteItem(del_id) {
+      console.log(del_id);
+      try {
+        const response = await axios.delete(
+          `http://localhost:7056/api/Student/${del_id}`
+        );
+
+        if (response.status === 200) {
+          console.log("Item deleted successfully.");
+          this.alertCustom("DELETED", "Successfull removeing!", "is-danger", "check")
+        } else {
+          console.error("Failed to delete item.");
+        }
+        this.fetchStudentList();
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    },
+    alertCustom(title, message, type, icon) {
+      this.$buefy.dialog.alert({
+        title: title,
+        message: message,
+        type: type,
+        hasIcon: true,
+        icon: icon,
+        iconPack: "fa",
+        ariaRole: "alertdialog",
+        ariaModal: true,
+      });
     },
   },
 };

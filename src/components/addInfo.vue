@@ -138,10 +138,9 @@ export default {
             .post("http://localhost:7056/api/Student/save", requestBody)
             .then((response) => {
               console.log("sending...");
-              if (response.status === 201) {
-                alert("Data added successfully.");
+              if (response.status === 200) {
+                this.alertCustom("added", "Successfull Add New Data!", "is-success", "check")
                 console.log("Data added successfully.");
-                this.$router.push("/");
               }
               this.$router.push("/");
             })
@@ -163,11 +162,24 @@ export default {
         if (localStorage.getItem(storeId)) {
           this.store.$reset();
           localStorage.removeItem(storeId);
+          this.alertCustom("reset", "Removed All inputs!", "is-danger", "check")
           // window.location.replace("/addInfo");
         }
       } catch (error) {
         console.log(error);
       }
+    },
+    alertCustom(title, message, type, icon) {
+      this.$buefy.dialog.alert({
+        title: title,
+        message: message,
+        type: type,
+        hasIcon: true,
+        icon: icon,
+        iconPack: "fa",
+        ariaRole: "alertdialog",
+        ariaModal: true,
+      });
     },
   },
   setup() {
